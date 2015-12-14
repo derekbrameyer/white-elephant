@@ -9,13 +9,13 @@ def main():
     boolines = json.loads(open("boo_lines.json").read())
     reportlines = json.loads(open("report_lines.json").read())
 
-    print "\nWelcome to White Elephant! Please input names line by line. When you are finished inputting names, press enter on a blank line.\n"
+    print greenify("\nWelcome to White Elephant! Please input names line by line. When you are finished inputting names, press enter on a blank line.\n")
     fullname = "tester"
     participants = []
     gifts = []
 
     while fullname:
-        fullname = raw_input("Participant name: ")
+        fullname = raw_input(greenify("Participant name: "))
         participants.append(Participant(fullname, None))
 
     participants.pop()
@@ -27,12 +27,12 @@ def main():
 
     firstparticipant = participants.pop()
 
-    print "======================="
-    print "        TURN 1"
-    print "======================="
+    print greenify("=======================")
+    print greenify("        TURN 1")
+    print greenify("=======================")
     print firstparticipant.fullname + " is up first! What gift did they get?"
 
-    giftname = raw_input("The gift is a/an: ")
+    giftname = raw_input(greenify("The gift is a/an: "))
     gift = Gift(giftname, 0, firstparticipant)
     firstparticipant.gift = gift
     gifts.append(gift)
@@ -52,26 +52,26 @@ def main():
             print "\n\nWelp, we're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?"
         else:
             print "Cool! An amazing " + gift.name + "! What a gift!\n\n"
-            print "======================="
-            print "        TURN " + str(currentturn)
-            print "======================="
+            print greenify("=======================")
+            print greenify("        TURN " + str(currentturn))
+            print greenify("=======================")
             print "Now we're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?"
 
         if len(giftsinturn) > 0:
-            action = raw_input("Input 1 to steal or 2 to pick a new gift: ")
+            action = raw_input(greenify("Input 1 to steal or 2 to pick a new gift: "))
         else:
             print "Actually, looks like there are no gifts left to steal! Moving on..."
             action = "0"
 
         if action == "1":
-            print "We're stealing! What does " + nextparticipant.fullname + " want?"
+            print "We're stealing! What does " + nextparticipant.fullname + " want?\n"
             displayCount = 1
             for gift in giftsinturn:
                 print "Gift " + str(displayCount) + ": " + gift.name + " (Owner: " + gift.owner.fullname + ", Steals: " + str(gift.steals) + ")"
                 displayCount += 1
             giftstealcount = maxstealcount + 1
             while giftstealcount >= maxstealcount:
-                giftselection = raw_input("Gift to steal (a number): ")
+                giftselection = raw_input(greenify("\nGift to steal (a number): "))
                 stolengift = giftsinturn[int(giftselection) - 1]
                 giftstealcount = stolengift.steals
                 if giftstealcount >= maxstealcount:
@@ -95,7 +95,7 @@ def main():
             previous_action = 0
         else:
             print "What gift did " + nextparticipant.fullname + " get?"
-            giftname = raw_input("The gift is a/an: ")
+            giftname = raw_input(greenify("The gift is a/an: "))
             gift = Gift(giftname, 0, nextparticipant)
             nextparticipant.gift = gift
             gifts.append(gift)
@@ -105,7 +105,7 @@ def main():
     # wrap up with the first participant optionally stealing again
     if previous_action == 0:
         print "\n\n"
-        print "======================="
+        print greenify("=======================")
         print "       LAST TURN"
         print "======================="
         print "Welp, we're almost done. Back to " + firstparticipant.fullname + ", who has the option to force a swap!"
@@ -116,7 +116,7 @@ def main():
         print "======================="
         print "Back to " + firstparticipant.fullname + ", who has the option to force a swap!"
 
-    print "Select the gift to swap for. If they're not swapping, input 0."
+    print "Select the gift to swap for. If they're not swapping, input 0.\n"
     displayCount = 1
     for gift in gifts:
         # don't display the owner's gift
@@ -127,7 +127,7 @@ def main():
 
     giftstealcount = maxstealcount + 1
     while giftstealcount >= maxstealcount:
-        giftselection = raw_input("Gift to swap (a number): ")
+        giftselection = raw_input(greenify("\nGift to swap (a number): "))
         if giftselection == "0":
             print "No swap! What a pal."
             break
@@ -151,9 +151,13 @@ def main():
     for gift in gifts:
         random.shuffle(reportlines)
         print reportlines[0] % (gift.owner.fullname, gift.name)
-        # print gift.owner.fullname + " got an amazing " + gift.name + "!"
 
+    print "\n\n"
 
+def greenify(string):
+    attr = []
+    attr.append('32')
+    return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), string)
 
 
 class Participant(object):
