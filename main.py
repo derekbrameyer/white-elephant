@@ -12,7 +12,9 @@ def main():
     reportlines = json.loads(open("report_lines.json").read())
     predefinedUsers = json.loads(open("participants.json").read())
 
-    print greenify("\nWelcome to White Elephant! Please input additional names line by line. When you are finished inputting names, press enter on a blank line.\n")
+    print greenify("\nWelcome to White Elephant! If needed please add remaining stragglers. When you are finished inputting names, press enter on a blank line.\n")
+    for name in predefinedUsers:
+        print greenify(name)
     say("Welcome to White Elephant! Who's playing?", voice_samantha)
     fullname = "tester"
     participants = []
@@ -78,8 +80,8 @@ def main():
             giftsinturn = list(gifts)
 
         if previous_action == 0:
-            print_and_save("\n\nWelp, we're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?", False)
-            say("Welp, we're on to " + nextparticipant.fullname + ". You can steal or pick a new gift.", voice_alex)
+            print_and_save("\n\nWe're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?", False)
+            say("We're on to " + nextparticipant.fullname + ". You can steal or pick a new gift.", voice_alex)
         else:
             print_and_save("Cool! An amazing " + gift.name + "! What a gift!\n\n", False, voice_alex)
             print_and_save("=======================", True)
@@ -148,7 +150,7 @@ def main():
         print_and_save("=======================", True)
         print_and_save("       LAST TURN", True, voice_alex)
         print_and_save("=======================", True)
-        print_and_save("Welp, we're almost done. Back to " + firstparticipant.fullname + ", who has the option to force a swap!", False, voice_alex)
+        print_and_save("Well, we're almost done. Back to " + firstparticipant.fullname + ", who has the option to force a swap!", False, voice_alex)
     else:
         print_and_save("Cool! An amazing " + gift.name + "! What a gift!\n\n", False, voice_alex)
         print_and_save("=======================", True)
@@ -201,7 +203,7 @@ def main():
 
     print_and_save("\n\n", False)
 
-    say("Thanks for playing! Now enjoy the rest of Happy Hour. The forecast calls for ugly sweaters.", voice_samantha)
+    say("Thanks for playing! Have a great holiday! The forecast calls for ugly sweaters.", voice_samantha)
 
     if should_save is '1':
         save_file.close()
