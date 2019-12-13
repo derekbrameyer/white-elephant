@@ -10,22 +10,28 @@ def main():
     currentturn = 1
     boolines = json.loads(open("boo_lines.json").read())
     reportlines = json.loads(open("report_lines.json").read())
+    predefinedUsers = json.loads(open("participants.json").read())
 
-    print greenify("\nWelcome to White Elephant! Please input names line by line. When you are finished inputting names, press enter on a blank line.\n")
+    print greenify("\nWelcome to White Elephant! Please input additional names line by line. When you are finished inputting names, press enter on a blank line.\n")
     say("Welcome to White Elephant! Who's playing?", voice_samantha)
     fullname = "tester"
     participants = []
     gifts = []
 
-    while fullname:
-        fullname = raw_input(greenify("Participant name: "))
-        participants.append(Participant(fullname, None))
-        if 0 < len(fullname):
-            play(sound_sent_message)
-        else:
-            play(sound_logged_in)
+    for user in predefinedUsers:
+        participants.append(Participant(user, None))
 
-    participants.pop()
+    add_stragglers = raw_input(greenify("\nType 1 to add any stragglers: "))
+    if add_stragglers is '1':
+        while fullname:
+            fullname = raw_input(greenify("Participant name: "))
+            participants.append(Participant(fullname, None))
+            if 0 < len(fullname):
+                play(sound_sent_message)
+            else:
+                play(sound_logged_in)
+
+        participants.pop()
 
     global should_save
     should_save = raw_input(greenify("\nType 1 to also generate a document of the game: "))
