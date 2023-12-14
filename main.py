@@ -3,7 +3,7 @@ __author__ = 'derekbrameyer'
 import random
 import json
 import datetime
-from subprocess import call
+from subprocess import call, Popen
 
 def main():
     maxstealcount = 2
@@ -21,15 +21,15 @@ def main():
         fullname = input(greenify("Participant name: "))
         participants.append(Participant(fullname, None))
         if 0 < len(fullname):
-            play(sound_sent_message)
+            play(sound_funk)
         else:
-            play(sound_logged_in)
+            play(sound_submarine)
 
     participants.pop()
 
     global should_save
     should_save = input(greenify("\nType 1 to also generate a document of the game: "))
-    if should_save is '1':
+    if should_save == '1':
         should_save = True
         global save_document
         filename = datetime.datetime.now().strftime("%Y%m%d") + "_" + datetime.datetime.now().strftime("%H%M") + "_white_elephant.txt"
@@ -49,10 +49,10 @@ def main():
     firstparticipant = participants.pop()
 
     print_and_save("=======================", True)
-    print_and_save("        TURN 1", True, voice_alex)
+    print_and_save("        TURN 1", True, voice_ralph)
     print_and_save("=======================", True)
     print_and_save(firstparticipant.fullname + " is up first! What gift did they get?", False)
-    say(firstparticipant.fullname + " is up first! Pick any gift.", voice_alex)
+    say(firstparticipant.fullname + " is up first! Pick any gift.", voice_ralph)
 
     giftname = input(greenify("The gift is a/an: "))
     save_to_file("The gift is a/an: " + giftname)
@@ -73,27 +73,27 @@ def main():
 
         if previous_action == 0:
             print_and_save("\n\nWelp, we're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?", False)
-            say("Welp, we're on to " + nextparticipant.fullname + ". You can steal or pick a new gift.", voice_alex)
+            say("Welp, we're on to " + nextparticipant.fullname + ". You can steal or pick a new gift.", voice_ralph)
         else:
-            print_and_save("Cool! An amazing " + gift.name + "! What a gift!\n\n", False, voice_alex)
+            print_and_save("Cool! An amazing " + gift.name + "! What a gift!\n\n", False, voice_ralph)
             print_and_save("=======================", True)
-            print_and_save("        TURN " + str(currentturn), True, voice_alex)
+            print_and_save("        TURN " + str(currentturn), True, voice_ralph)
             print_and_save("=======================", True)
             print_and_save("Now we're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?", False)
-            say("Now we're on to " + nextparticipant.fullname + ". You can steal or pick a new gift.", voice_alex)
+            say("Now we're on to " + nextparticipant.fullname + ". You can steal or pick a new gift.", voice_ralph)
 
         if len(giftsinturn) > 0:
             action = input(greenify("Input 1 to steal or 2 to pick a new gift: "))
             save_to_file("Input 1 to steal or 2 to pick a new gift: " + action)
         else:
             play(sound_basso)
-            print_and_save("Actually, looks like there are no gifts left to steal! Moving on...", False, voice_alex)
+            print_and_save("Actually, looks like there are no gifts left to steal! Moving on...", False, voice_ralph)
             action = "0"
 
         if action == "1":
             print_and_save("We're stealing! What does " + nextparticipant.fullname + " want?\n", False)
             play(sound_sosumi)
-            say("We're stealing!", voice_alex)
+            say("We're stealing!", voice_ralph)
             displayCount = 1
             for gift in giftsinturn:
                 print_and_save("Gift " + str(displayCount) + ": " + gift.name + " (Owner: " + gift.owner.fullname + ", Steals: " + str(gift.steals) + ")", False)
@@ -121,9 +121,9 @@ def main():
 
             # TODO If gift has max steals, print something
             if stolengift.steals >= maxstealcount:
-                print_and_save("Congrats to " + stolengift.owner.fullname + " for being the true owner of a shiny new " + stolengift.name + "!", False, voice_alex)
+                print_and_save("Congrats to " + stolengift.owner.fullname + " for being the true owner of a shiny new " + stolengift.name + "!", False, voice_ralph)
             
-            play(sound_file_transfer_complete)
+            play(sound_glass)
 
             previous_action = 0
         else:
@@ -140,15 +140,15 @@ def main():
     if previous_action == 0:
         print_and_save("\n\n", False)
         print_and_save("=======================", True)
-        print_and_save("       LAST TURN", True, voice_alex)
+        print_and_save("       LAST TURN", True, voice_ralph)
         print_and_save("=======================", True)
-        print_and_save("Welp, we're almost done. Back to " + firstparticipant.fullname + ", who has the option to force a swap!", False, voice_alex)
+        print_and_save("Welp, we're almost done. Back to " + firstparticipant.fullname + ", who has the option to force a swap!", False, voice_ralph)
     else:
-        print_and_save("Cool! An amazing " + gift.name + "! What a gift!\n\n", False, voice_alex)
+        print_and_save("Cool! An amazing " + gift.name + "! What a gift!\n\n", False, voice_ralph)
         print_and_save("=======================", True)
-        print_and_save("       LAST TURN", True, voice_alex)
+        print_and_save("       LAST TURN", True, voice_ralph)
         print_and_save("=======================", True)
-        print_and_save("Back to " + firstparticipant.fullname + ", who has the option to force a swap!", False, voice_alex)
+        print_and_save("Back to " + firstparticipant.fullname + ", who has the option to force a swap!", False, voice_ralph)
 
     print_and_save("Select the gift to swap for. If they're not swapping, input 0.\n", False)
     displayCount = 1
@@ -166,7 +166,7 @@ def main():
         giftselection = input(greenify("\nGift to swap (a number): "))
         save_to_file("\nGift to swap (a number): " + giftselection)
         if giftselection == "0":
-            print_and_save("No swap! What a pal.", False, voice_alex)
+            print_and_save("No swap! What a pal.", False, voice_ralph)
             break
         if giftselection > owner_pivot_idx:
             giftselection = str(int(giftselection) + 1)
@@ -197,7 +197,7 @@ def main():
 
     say("Thanks for playing! Now enjoy the rest of Happy Hour. The forecast calls for ugly sweaters.", voice_samantha)
 
-    if should_save is '1':
+    if should_save == '1':
         save_file.close()
 
 def greenify(string):
@@ -239,7 +239,7 @@ should_play_sounds = True
 
 voice_samantha = "Samantha"
 voice_fred = "Fred"
-voice_alex = "Alex"
+voice_ralph = "Daniel"
 
 def say(message, voice):
     if should_play_sounds:
@@ -249,13 +249,12 @@ sound_glass = "/System/Library/Sounds/Glass.aiff"
 sound_hero = "/System/Library/Sounds/Hero.aiff"
 sound_basso = "/System/Library/Sounds/Basso.aiff"
 sound_sosumi = "/System/Library/Sounds/Sosumi.aiff"
-sound_sent_message = "/Applications/Messages.app/Contents/Resources/Sent Message.aiff"
-sound_logged_in = "/Applications/Messages.app/Contents/Resources/Logged In.aiff"
-sound_file_transfer_complete = "/Applications/Messages.app/Contents/Resources/File Transfer Complete.aiff"
+sound_funk = "/System/Library/Sounds/Funk.aiff"
+sound_submarine = "/System/Library/Sounds/Submarine.aiff"
 
 def play(sound):
     if should_play_sounds:
-        call(["afplay", sound])
+        Popen(["afplay", sound])
 
 if __name__ == "__main__":
     main()
