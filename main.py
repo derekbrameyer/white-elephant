@@ -10,27 +10,27 @@ def main():
     boolines = json.loads(open("boo_lines.json").read())
     reportlines = json.loads(open("report_lines.json").read())
 
-    print greenify("\nWelcome to White Elephant! Please input names line by line. When you are finished inputting names, press enter on a blank line.\n")
+    print(greenify("\nWelcome to White Elephant! Please input names line by line. When you are finished inputting names, press enter on a blank line.\n"))
     fullname = "tester"
     participants = []
     gifts = []
 
     while fullname:
-        fullname = raw_input(greenify("Participant name: "))
+        fullname = input(greenify("Participant name: "))
         participants.append(Participant(fullname, None))
 
     participants.pop()
 
     global should_save
-    should_save = raw_input(greenify("\nType 1 to also generate a document of the game: "))
+    should_save = input(greenify("\nType 1 to also generate a document of the game: "))
     if should_save is '1':
         should_save = True
         global save_document
         filename = datetime.datetime.now().strftime("%Y%m%d") + "_" + datetime.datetime.now().strftime("%H%M") + "_white_elephant.txt"
-        print filename
+        print(filename)
         save_document = open(filename, "w")
 
-    print "\nRandomizing the order...\n"
+    print("\nRandomizing the order...\n")
 
     random.shuffle(participants)
     participants.reverse()
@@ -42,7 +42,7 @@ def main():
     print_and_save("=======================", True)
     print_and_save(firstparticipant.fullname + " is up first! What gift did they get?", False)
 
-    giftname = raw_input(greenify("The gift is a/an: "))
+    giftname = input(greenify("The gift is a/an: "))
     save_to_file("The gift is a/an: " + giftname)
     gift = Gift(giftname, 0, firstparticipant)
     firstparticipant.gift = gift
@@ -69,7 +69,7 @@ def main():
             print_and_save("Now we're on to " + nextparticipant.fullname + ". Are they stealing or picking a new gift?", False)
 
         if len(giftsinturn) > 0:
-            action = raw_input(greenify("Input 1 to steal or 2 to pick a new gift: "))
+            action = input(greenify("Input 1 to steal or 2 to pick a new gift: "))
             save_to_file("Input 1 to steal or 2 to pick a new gift: " + action)
         else:
             print_and_save("Actually, looks like there are no gifts left to steal! Moving on...", False)
@@ -83,7 +83,7 @@ def main():
                 displayCount += 1
             giftstealcount = maxstealcount + 1
             while giftstealcount >= maxstealcount:
-                giftselection = raw_input(greenify("\nGift to steal (a number): "))
+                giftselection = input(greenify("\nGift to steal (a number): "))
                 save_to_file("\nGift to steal (a number): " + giftselection)
                 stolengift = giftsinturn[int(giftselection) - 1]
                 giftstealcount = stolengift.steals
@@ -108,7 +108,7 @@ def main():
             previous_action = 0
         else:
             print_and_save("What gift did " + nextparticipant.fullname + " get?", False)
-            giftname = raw_input(greenify("The gift is a/an: "))
+            giftname = input(greenify("The gift is a/an: "))
             save_to_file("The gift is a/an: " + giftname)
             gift = Gift(giftname, 0, nextparticipant)
             nextparticipant.gift = gift
@@ -143,7 +143,7 @@ def main():
 
     giftstealcount = maxstealcount + 1
     while giftstealcount >= maxstealcount:
-        giftselection = raw_input(greenify("\nGift to swap (a number): "))
+        giftselection = input(greenify("\nGift to swap (a number): "))
         save_to_file("\nGift to swap (a number): " + giftselection)
         if giftselection == "0":
             print_and_save("No swap! What a pal.", False)
@@ -183,9 +183,9 @@ def greenify(string):
 
 def print_and_save(string, should_greenify):
     if should_greenify:
-        print greenify(string)
+        print(greenify(string))
     else:
-        print string
+        print(string)
     save_to_file(string)
 
 def save_to_file(string):
